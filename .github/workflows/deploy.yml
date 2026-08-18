@@ -1,0 +1,66 @@
+name: Deploy CF-Optimizor to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Detect Project Directory
+        id: detect
+        run: |
+          if [ -f "package.json" ]; then
+            echo "dir=." >> $GITHUB_OUTPUT
+          else
+            FOUND=$(find . -maxdepth 2 -name "package.json" -not -path "*/node_modules/*" | head -n 1)
+            if [ -n "$FOUND" ]; then
+              echo "dir=$(dirname "$FOUND")" >> $GITHUB_OUTPUT
+            else
+              echo "dir=." >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Setup Node.js 22 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        working-directory: ${{ steps.detect.outputs.dir }}
+        run: npm install
+
+      - name: Build Application
+        working-directory: ${{ steps.detect.outputs.dir }}
+        run: npm run build
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ steps.detect.outputs.dir }}/dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#080a0e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>CF-Optimizor Pro — مرکز تخصصی بهینه‌سازی شبکه، پینگ گیمینگ و پروکسی (PWA)</title>
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">\n  <link rel="apple-touch-icon" href="./apple-touch-icon.png">\n  <link rel="manifest" href="./manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Manrope:wght@400;600;800&family=Vazirmatn:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080a0e;
+      --card-bg: rgba(16, 20, 28, 0.88);
+      --line: rgba(255, 255, 255, 0.08);
+      --text: #eef2f7;
+      --text-muted: #9aa6b8;
+      --lime: #00ff88;
+      --cyan: #00f0ff;
+      --amber: #ffb454;
+      --purple: #c084fc;
+      --rose: #ff4d6d;
+      --font: 'Vazirmatn', 'Manrope', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--bg); color: var(--text); font-family: var(--font);
+      min-height: 100vh; line-height: 1.6; padding-bottom: 75px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
+    .glass-card {
+      background: var(--card-bg); border: 1px solid var(--line);
+      border-radius: 24px; padding: 24px; backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    header {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(8,10,14,0.95); backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--line); padding: 12px 16px;
+    }
+    .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
+    .nav-tabs {
+      display: flex; gap: 6px; overflow-x: auto; padding-top: 8px;
+      max-width: 1100px; margin: 0 auto; scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      background: transparent; border: 1px solid transparent; color: var(--text-muted);
+      padding: 8px 14px; border-radius: 12px; font-family: var(--font);
+      font-size: 12px; font-weight: 800; cursor: pointer; white-space: nowrap;
+      transition: all .2s; display: flex; align-items: center; gap: 6px;
+    }
+    .tab-btn.active {
+      background: rgba(0,255,136,0.15); color: #fff;
+      border-color: rgba(0,255,136,0.4); box-shadow: 0 0 15px rgba(0,255,136,0.2);
+    }
+    .btn {
+      padding: 10px 18px; border-radius: 14px; font-weight: 800; font-size: 12px;
+      cursor: pointer; transition: all .2s; border: none; font-family: var(--font);
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-lime { background: var(--lime); color: #000; }
+    .btn-lime:hover { box-shadow: 0 0 20px rgba(0,255,136,0.4); }
+    .btn-cyan { background: var(--cyan); color: #000; }
+    .btn-purple { background: var(--purple); color: #000; }
+    .btn-amber { background: var(--amber); color: #000; }
+    .btn-rose { background: var(--rose); color: #fff; }
+    .btn-dark { background: #141a24; color: var(--text); border: 1px solid var(--line); }
+    input, select, textarea {
+      width: 100%; background: #03060f; border: 1px solid var(--line);
+      border-radius: 14px; padding: 10px 14px; color: #fff;
+      font-family: var(--font); font-size: 12px;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--lime); }
+    .font-mono { font-family: var(--mono) !important; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn .2s ease-out; }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
+    .mobile-nav {
+      display: none; position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(8,10,14,0.96); backdrop-filter: blur(20px);
+      border-top: 1px solid var(--line); padding: 8px 2px; z-index: 50;
+      justify-content: space-around;
+    }
+    @media (max-width: 900px) {
+      .nav-tabs { display: none; }
+      .mobile-nav { display: flex; }
+      .mobile-nav-btn {
+        background: none; border: none; color: var(--text-muted);
+        display: flex; flex-direction: column; align-items: center;
+        font-size: 9px; font-family: var(--font); cursor: pointer;
+        padding: 3px 4px; border-radius: 8px;
+      }
+      .mobile-nav-btn.active { color: var(--lime); font-weight: 900; background: rgba(0,255,136,0.1); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-content">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, var(--lime), var(--cyan)); display:flex; align-items:center; justify-content:center; color:#000; font-weight:900;">⚡</div>
+        <div>
+          <div style="font-weight:900; font-size:15px; display:flex; align-items:center; gap:6px;">
+            <span>CF-OPTIMIZOR</span>
+            <span style="font-size:10px; background:rgba(0,255,136,0.15); color:var(--lime); padding:2px 6px; border-radius:6px; font-family:var(--mono);">PWA v4.8</span>
+          </div>
+          <p style="font-size:11px; color:var(--text-muted);">پینگ زنده سرورهای بازی، DoH و تزریق فرگمنت</p>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span id="py-status-badge" style="font-size:10px; font-family:var(--mono); background:rgba(0,255,136,0.15); color:var(--lime); padding:4px 8px; border-radius:8px; border:1px solid rgba(0,255,136,0.3);">
+          🐍 Python Backend Ready
+        </span>
+        <button id="pwa-install-btn" class="btn btn-lime" style="padding:6px 12px; font-size:11px;" onclick="installPWA()">📲 نصب PWA</button>
+      </div>
+    </div>
+
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('quick')">⚡ بهینه‌ساز هوشمند</button>
+      <button class="tab-btn" onclick="switchTab('sublink')">🔗 ساخت لینک اشتراک</button>
+      <button class="tab-btn" onclick="switchTab('database')">💾 دیتابیس و حافظه</button>
+      <button class="tab-btn" onclick="switchTab('gaming')">🎮 پینگ زنده گیمینگ</button>
+      <button class="tab-btn" onclick="switchTab('ips')">🧪 اسکنر آی‌پی</button>
+      <button class="tab-btn" onclick="switchTab('doh')">🛡️ استودیو DoH</button>
+      <button class="tab-btn" onclick="switchTab('frag')">🛰️ فرگمنت و نویز</button>
+      <button class="tab-btn" onclick="switchTab('conv')">🔄 مبدل کلاینت‌ها</button>
+      <button class="tab-btn" onclick="switchTab('batch')">🧹 پاک‌سازی ساب</button>
+      <button class="tab-btn" onclick="switchTab('doctor')">🔍 دکتر نود</button>
+      <button class="tab-btn" onclick="switchTab('tools')">🧰 ابزارها</button>
+    </nav>
+  </header>
+
+  <div class="container" style="margin-top:16px;">
+
+            <!-- TAB 1: QUICK OPTIMIZER (EXACT ARASTEY CF-OPTIMIZOR) -->
+    <div id="tab-quick" class="tab-content active">
+      <div class="glass-card" style="margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+          <div>
+            <h1 style="font-size:20px; font-weight:900; color:#34d399; margin-bottom:2px;">بهینه‌ساز کانفیگ</h1>
+            <p style="font-size:11px; color:var(--text-muted);">افزودن Fragment، Cipher Suites (`cs`) و FinalMask (`fm`) به کانفیگ‌های VPN</p>
+          </div>
+        </div>
+
+        <div style="background:rgba(52,211,153,0.1); border:1px solid rgba(52,211,153,0.25); border-radius:14px; padding:10px 14px; font-size:11px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+          <span style="color:#34d399; font-weight:bold;">دریافت مخصوص ویندوز و iOS:</span>
+          <span style="color:var(--text-muted); font-size:10.5px;">iOS: ابتدا حالت عادی، در صورت نیاز JSON — ویندوز: فقط JSON (v2rayN v7.24.7)</span>
+        </div>
+      </div>
+
+      <div class="glass-card" style="margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-weight:bold; font-size:13px;">کانفیگ‌های ورودی</span>
+            <span id="input-lines-badge" class="font-mono" style="font-size:10px; background:#03060f; color:var(--text-muted); padding:2px 8px; border-radius:10px; border:1px solid var(--line);">0 خط</span>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-dark" style="font-size:11px; padding:4px 10px;" onclick="pasteToInput()">📋 چسباندن</button>
+            <label class="btn btn-dark" style="font-size:11px; padding:4px 10px; color:var(--cyan); cursor:pointer;">
+              📁 فایل
+              <input type="file" id="file-input-arastey" accept=".txt,.json,.data,.dat,.cfg" style="display:none;" onchange="handleArasFileUpload(event)">
+            </label>
+            <button class="btn btn-dark" style="font-size:11px; padding:4px 10px; color:#ff5d73;" onclick="clearInput()">🗑️ پاک کردن</button>
+          </div>
+        </div>
+
+        <textarea id="raw-input" rows="5" class="font-mono" dir="ltr" style="font-size:11px; margin-bottom:6px;" placeholder="کانفیگ · لینک ساب · کد base64 — همه پشتیبانی می‌شوند" oninput="updateLineCount()"></textarea>
+        <span style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:12px;">فایل .txt · لینک ساب · base64 — بدون محدودیت</span>
+
+        <button class="btn btn-lime" style="width:100%; padding:14px; font-size:14px; font-weight:900; justify-content:center; box-shadow:0 0 25px rgba(52,211,153,0.35);" onclick="runArasteyOptimize()">⚡ بهینه‌سازی</button>
+      </div>
+
+      <!-- Advanced Settings Accordion -->
+      <div class="glass-card" style="margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleAdvancedSettings()">
+          <span style="font-weight:bold; font-size:13px; color:#fff;">⚙️ تنظیمات پیشرفته</span>
+          <span style="font-size:11px; color:var(--text-muted);">آدرس · Fingerprint · Cipher Suites · FinalMask ▾</span>
+        </div>
+
+        <div id="adv-settings-body" style="display:flex; flex-direction:column; gap:12px; margin-top:14px; padding-top:14px; border-top:1px solid var(--line);">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <label style="font-size:11px; font-weight:bold;">آدرس سرور <span style="font-size:10px; color:var(--text-muted); font-weight:normal;">(اختیاری)</span></label>
+              <button class="btn btn-dark" style="font-size:10px; padding:2px 6px; color:#ff5d73;" onclick="document.getElementById('server-addr').value = ''">❌ پاک</button>
+            </div>
+            <input type="text" id="server-addr" class="font-mono" placeholder="پیش‌فرض خالی — IP یا دامنهٔ اصلی تغییر نمی‌کند." style="font-size:11px;">
+            <span style="font-size:10px; color:var(--text-muted);">پیش‌فرض خالی — IP یا دامنهٔ اصلی تغییر نمی‌کند.</span>
+          </div>
+
+          <div>
+            <label style="font-size:11px; font-weight:bold; display:block; margin-bottom:4px;">Fingerprint</label>
+            <select id="fp-select" class="font-mono" style="font-size:11px; width:100%; background:#03060f; border:1px solid var(--line); border-radius:10px; padding:8px; color:#fff;">
+              <option value="chrome" selected>chrome</option>
+              <option value="firefox">firefox</option>
+              <option value="safari">safari</option>
+              <option value="edge">edge</option>
+              <option value="random">random</option>
+              <option value="unsafe">unsafe</option>
+            </select>
+            <span style="font-size:10px; color:var(--text-muted);">روی همهٔ کانفیگ‌ها اعمال می‌شود.</span>
+          </div>
+
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <label style="font-size:11px; font-weight:bold; display:flex; align-items:center; gap:4px;">
+                <span style="background:#10141c; padding:2px 6px; border-radius:6px; font-family:var(--mono);">cs</span>
+                Cipher Suites
+              </label>
+              <button class="btn btn-dark" style="font-size:10px; padding:2px 6px; color:#34d399;" onclick="resetCipherSuites()">بازنشانی پیش‌فرض</button>
+            </div>
+            <textarea id="cs-input" rows="3" class="font-mono" dir="ltr" style="font-size:10px;">TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256:TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256:TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256:TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA:TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA:TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256:TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256</textarea>
+          </div>
+
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <label style="font-size:11px; font-weight:bold; display:flex; align-items:center; gap:4px;">
+                <span style="background:#10141c; padding:2px 6px; border-radius:6px; font-family:var(--mono);">fm</span>
+                FinalMask
+              </label>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span id="fm-valid-badge" style="font-size:10px; color:#34d399; font-weight:bold;">✓ JSON معتبر</span>
+                <button class="btn btn-dark" style="font-size:10px; padding:2px 6px; color:#34d399;" onclick="resetFinalMask()">بازنشانی</button>
+              </div>
+            </div>
+            <textarea id="fm-input" rows="4" class="font-mono" dir="ltr" style="font-size:10px; color:#34d399;">{"tcp":[{"type":"fragment","settings":{"packets":"tlshello","lengths":["5","94","1"],"delays":["0"],"maxSplit":"0"}},{"type":"fragment","settings":{"packets":"1-1","lengths":["109","1"],"delays":["1"],"maxSplit":"355"}}]}</textarea>
+          </div>
+
+          <div style="display:flex; gap:6px; flex-wrap:wrap; padding-top:6px; border-top:1px solid var(--line); font-size:10px; font-weight:bold;">
+            <span style="background:rgba(52,211,153,0.15); color:#34d399; padding:4px 8px; border-radius:8px;">✦ کامل vless</span>
+            <span style="background:rgba(52,211,153,0.15); color:#34d399; padding:4px 8px; border-radius:8px;">✦ کامل trojan</span>
+            <span style="background:#10141c; color:var(--text-muted); padding:4px 8px; border-radius:8px;">✦ عبور vmess</span>
+            <span style="background:#10141c; color:var(--text-muted); padding:4px 8px; border-radius:8px;">✦ عبور ss</span>
+            <span style="background:#10141c; color:var(--text-muted); padding:4px 8px; border-radius:8px;">✦ عبور hysteria2</span>
+            <span style="background:#10141c; color:var(--text-muted); padding:4px 8px; border-radius:8px;">✦ عبور tuic</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Section -->
+      <div id="output-card-container" class="glass-card" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-weight:bold; font-size:13px;">خروجی</span>
+            <span id="output-badge" class="font-mono" style="font-size:10px; background:rgba(52,211,153,0.15); color:#34d399; padding:2px 8px; border-radius:10px;">0 کانفیگ</span>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="btn btn-lime" style="font-size:11px; padding:4px 10px;" onclick="copyArasteyOutput()">📋 کپی همه</button>
+            <button class="btn btn-dark" style="font-size:11px; padding:4px 10px;" onclick="downloadArasteyTxt()">💾 دانلود TXT</button>
+            <button class="btn btn-purple" style="font-size:11px; padding:4px 10px;" onclick="downloadArasteyJson()">💾 خروجی JSON</button>
+            <button class="btn btn-dark" style="font-size:11px; padding:4px 8px; color:#ff5d73;" onclick="document.getElementById('output-card-container').style.display='none'">🗑️</button>
+          </div>
+        </div>
+        <textarea id="opt-output" rows="8" class="font-mono" dir="ltr" style="font-size:11px; color:var(--cyan);" readonly></textarea>
+      </div>
+    </div>
+
+    <!-- TAB: SUB LINK GENERATOR -->
+    <div id="tab-sublink" class="tab-content">
+      <div class="glass-card">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:6px; color:var(--lime);">🔗 استودیو ساخت لینک اشتراک گروهی آنلاین (Live Updatable Sub Link)</h2>
+        <p style="font-size:11px; color:var(--text-muted); margin-bottom:14px;">
+          تبدیل چند کانفیگ به یک لینک سابسکریپشن آنلاین دائمی با امکان بروزرسانی خودکار در نرم‌افزارهای V2RayNG، Sing-Box، Clash و Hiddify.
+        </p>
+
+        <div class="grid-2">
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div>
+              <label style="font-size:11px; font-weight:bold;">عنوان گروه اشتراکی (Profile Title):</label>
+              <input type="text" id="gist-sub-title" value="⚡ VIP Cloudflare Group" class="font-mono">
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div>
+                <label style="font-size:11px; font-weight:bold;">دوره بروزرسانی:</label>
+                <select id="gist-sub-interval">
+                  <option value="6">هر ۶ ساعت</option>
+                  <option value="12" selected>هر ۱۲ ساعت</option>
+                  <option value="24">هر ۲۴ ساعت</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:11px; font-weight:bold;">فرمت خروجی لینک:</label>
+                <select id="gist-sub-format">
+                  <option value="base64">Universal Base64</option>
+                  <option value="singbox">Sing-Box JSON Profile</option>
+                  <option value="clash">Clash Meta YAML</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label style="font-size:11px; font-weight:bold;">توکن GitHub (اختیاری جهت بروزرسانی همیشگی):</label>
+              <input type="password" id="gist-gh-token" placeholder="ghp_... (اختیاری)" class="font-mono">
+            </div>
+
+            <div>
+              <label style="font-size:11px; font-weight:bold;">کانفیگ‌های گروه:</label>
+              <textarea id="gist-input-configs" rows="5" class="font-mono" dir="ltr">vless://351c9981-04b6-4103-aa4b-864aa9c91469@104.16.1.1:443?type=ws&security=tls#🟢-MCI-Fast
+vless://351c9981-04b6-4103-aa4b-864aa9c91469@104.17.2.2:443?type=ws&security=tls#🟡-MTN-Fast</textarea>
+            </div>
+
+            <button class="btn btn-lime" onclick="createLiveGistSub()">🚀 ایجاد / بروزرسانی لینک سابسکریپشن آنلاین</button>
+          </div>
+
+          <div style="display:flex; flex-direction:column; justify-content:space-between; gap:10px;">
+            <div>
+              <label style="font-size:11px; font-weight:bold;">لینک اشتراک آنلاین تولیدشده:</label>
+              <div id="gist-sub-url-box" class="font-mono" style="background:#03060f; border:1px solid var(--line); border-radius:14px; padding:12px; font-size:11px; color:var(--cyan); min-height:80px; word-break:break-all;" dir="ltr">
+                هنوز لینکی ساخته نشده است. روی دکمه ایجاد کلیک کنید.
+              </div>
+              <div style="display:flex; gap:8px; margin-top:8px;">
+                <button class="btn btn-lime" style="flex:1;" onclick="copyGistSubUrl()">📋 کپی لینک سابسکریپشن</button>
+                <button class="btn btn-dark" onclick="openGistQr()">📱 بارکد QR</button>
+              </div>
+            </div>
+
+            <div style="background:#03060f; padding:12px; border-radius:14px; font-size:11px; color:var(--text-muted); line-height:1.7;">
+              💡 <b>نحوه کارکرد:</b> این لینک را در کلاینت‌های V2RayNG یا Hiddify در بخش Subscription وارد کنید. با ویرایش کانفیگ‌ها در اینجا و زدن دکمه «بروزرسانی»، کلاینت‌های کاربران به صورت خودکار تغییرات را دریافت می‌کنند.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- TAB: DATABASE & STORAGE MANAGER -->
+    <div id="tab-database" class="tab-content">
+      <div class="glass-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div>
+            <h2 style="font-size:18px; font-weight:900; color:#34d399;">💾 پایگاه داده و حافظه دائمی (Database Hub)</h2>
+            <p style="font-size:11px; color:var(--text-muted);">مدیریت کانفیگ‌های ذخیره‌شده، تاریخچه سابسکریپشن‌ها و دریافت فایل پشتیبان Backup JSON</p>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-purple" style="font-size:11px; padding:6px 10px;" onclick="exportDbData()">🔐 خروجی محافظت‌شده (.data)</button>
+            <button class="btn btn-dark" style="font-size:11px; padding:6px 10px;" onclick="exportDbJson()">📥 خروجی پشتیبان (JSON)</button>
+            <button class="btn btn-lime" style="font-size:11px; padding:6px 10px;" onclick="document.getElementById('db-restore-file').click()">📤 بازیابی پشتیبان</button>
+            <input type="file" id="db-restore-file" accept=".json,.data,.dat,.cfg" style="display:none;" onchange="importDbJson(event)">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:16px;">
+          <div style="background:#03060f; border:1px solid var(--line); border-radius:14px; padding:12px;">
+            <span style="font-size:10px; color:var(--text-muted); display:block;">کانفیگ‌های ذخیره‌شده:</span>
+            <span id="db-stat-configs" style="font-size:16px; font-weight:bold; color:#34d399;">0 نود</span>
+          </div>
+          <div style="background:#03060f; border:1px solid var(--line); border-radius:14px; padding:12px;">
+            <span style="font-size:10px; color:var(--text-muted); display:block;">لینک‌های سابسکریپشن:</span>
+            <span id="db-stat-subs" style="font-size:16px; font-weight:bold; color:var(--cyan);">0 لینک</span>
+          </div>
+          <div style="background:#03060f; border:1px solid var(--line); border-radius:14px; padding:12px;">
+            <span style="font-size:10px; color:var(--text-muted); display:block;">موتور پایگاه داده:</span>
+            <span style="font-size:13px; font-weight:bold; color:var(--lime);">IndexedDB + Local</span>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-weight:bold; font-size:12px;">لیست کانفیگ‌های موجود در دیتابیس:</span>
+            <button class="btn btn-dark" style="font-size:10px; padding:4px 8px; color:#ff5d73;" onclick="clearAllDbStorage()">🗑️ پاک‌سازی دیتابیس</button>
+          </div>
+          <div id="db-configs-list" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px; max-height:300px; overflow-y:auto;">
+            <!-- Items rendered via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: GAMING LIVE PING -->
+    <div id="tab-gaming" class="tab-content">
+      <div class="glass-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div>
+            <h2 style="font-size:18px; font-weight:900; color:var(--cyan);">🎮 پینگ زنده سرورهای بازی (Call of Duty, Steam, Valorant)</h2>
+            <p style="font-size:11px; color:var(--text-muted);">سنجش لحظه‌ای تاخیر و نوسان پینگ (Jitter) روی سرورهای بازی آنلاین و شبکه‌های اجتماعی</p>
+          </div>
+          <button id="live-ping-toggle" class="btn btn-lime" onclick="toggleContinuousGamingPing()">⚡ شروع مانیتورینگ زنده مداوم</button>
+        </div>
+
+        <div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;">
+          <button class="btn btn-dark" onclick="filterGamingTargets('all')">همه سرویس‌ها</button>
+          <button class="btn btn-dark" onclick="filterGamingTargets('gaming')">🎮 سرورهای بازی</button>
+          <button class="btn btn-dark" onclick="filterGamingTargets('web')">🌐 وب و سوشال</button>
+          <button class="btn btn-dark" onclick="filterGamingTargets('dns')">🛡️ دی‌ان‌اس و کلودفلر</button>
+        </div>
+
+        <div id="gaming-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:12px;"></div>
+      </div>
+    </div>
+
+        <!-- TAB 3: IP SCANNER (FULL SCALE) -->
+    <div id="tab-ips" class="tab-content">
+      <div class="glass-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div>
+            <h2 style="font-size:18px; font-weight:900; color:var(--amber);">🧪 اسکنر موتور Cloudflare-Clean-IP و بانک رنج‌های رسمی</h2>
+            <p style="font-size:11px; color:var(--text-muted);">اسکن چندریسمانی تمامی ۱۵ رنج رسمی کلودفلر (ip.txt / ipv6.txt) با الگوریتم ۳ مرحله‌ای TCPing و تست سرعت دانلود</p>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="btn btn-lime" onclick="runFullScaleScan(150)">⚡ اسکن سریع (۱۵۰ آی‌پی)</button>
+            <button class="btn btn-purple" onclick="runFullScaleScan(300)">🚀 اسکن استاندارد (۳۰۰ آی‌پی)</button>
+            <button class="btn btn-dark" onclick="exportCsvResults()">📊 دانلود CSV</button>
+            <button class="btn btn-dark" onclick="injectTopIpsToConfigs(10)">⚡ تزریق ۱۰ آی‌پی برتر</button>
+          </div>
+        </div>
+
+        <!-- Custom IP Textarea -->
+        <div style="background:#03060f; border:1px solid var(--line); border-radius:14px; padding:12px; margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-size:11px; font-weight:bold; color:var(--cyan);">ورودی سفارشی آی‌پی‌ها یا ساب‌نت‌ها (مشابه EDT-Pages):</span>
+            <button class="btn btn-cyan" style="padding:4px 8px; font-size:10px;" onclick="scanCustomTextareaIps()">اسکن این لیست</button>
+          </div>
+          <textarea id="custom-ips-box" rows="3" class="font-mono" dir="ltr" placeholder="104.16.1.1&#10;104.17.2.2&#10;172.64.0.0/13..." style="font-size:11px;"></textarea>
+        </div>
+
+        <div id="clean-ips-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; max-height:450px; overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- TAB 4: DOH LAB -->
+    <div id="tab-doh" class="tab-content">
+      <div class="glass-card">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:6px; color:var(--purple);">🛡️ استودیو دی‌ان‌اس رمزنگاری‌شده (DoH)</h2>
+        <div class="grid-2">
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <label style="font-size:11px; font-weight:bold;">دامنه هدف:</label>
+            <input type="text" id="doh-domain" value="speed.cloudflare.com" dir="ltr" class="font-mono">
+            <button class="btn btn-purple" onclick="queryDoh()">🔍 استعلام زنده DoH</button>
+            <div id="doh-result-box" style="background:#03060f; padding:12px; border-radius:12px; font-family:var(--mono); font-size:11px;"></div>
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:bold;">پیکربندی خودکار DNS برای Sing-Box:</label>
+            <textarea id="doh-singbox-out" rows="9" class="font-mono" dir="ltr" readonly style="color:var(--amber);"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: FRAGMENT LAB -->
+    <div id="tab-frag" class="tab-content">
+      <div class="glass-card">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:6px; color:#f472b6;">🛰️ آزمایشگاه تخصصی فرگمنت، نویز و فریب پکت‌های DPI</h2>
+        <div class="grid-2">
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+              <div>
+                <label style="font-size:11px; font-weight:bold;">طول پکت:</label>
+                <input type="text" id="frag-len" value="100-200" class="font-mono" style="text-align:center; color:var(--lime);">
+              </div>
+              <div>
+                <label style="font-size:11px; font-weight:bold;">بازه زمانی:</label>
+                <input type="text" id="frag-int" value="10-20" class="font-mono" style="text-align:center; color:var(--lime);">
+              </div>
+              <div>
+                <label style="font-size:11px; font-weight:bold;">پکت‌ها:</label>
+                <input type="text" id="frag-pack" value="1-3" class="font-mono" style="text-align:center; color:var(--lime);">
+              </div>
+            </div>
+            <button class="btn btn-purple" onclick="runOptimization()">اعمال پارامترهای فرگمنت</button>
+          </div>
+          <div style="background:#03060f; padding:14px; border-radius:14px; border:1px solid var(--line); font-size:11px; color:var(--text-muted); line-height:1.7;">
+            <h4 style="color:#f472b6; font-weight:bold; margin-bottom:6px;">مکانیزم ضد فیلترینگ فرگمنت:</h4>
+            سیستم‌های فیلترینگ هوشمند پکت آغازین TLS (ClientHello) را که حاوی نام دامنه (SNI) است بازرسی می‌کنند. با تکه‌تکه‌سازی این پکت و ارسال در بازه‌های میلی‌ثانیه‌ای، بسته‌ها بدون شناسایی از فیلترینگ عبور می‌کنند.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: CONVERTER -->
+    <div id="tab-conv" class="tab-content">
+      <div class="glass-card">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:6px; color:var(--purple);">🔄 مبدل جامع سابسکریپشن به Sing-Box 1.11+ و Clash Meta</h2>
+        <div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;">
+          <button class="btn btn-purple" onclick="convertTo('singbox')">Sing-Box JSON</button>
+          <button class="btn btn-cyan" onclick="convertTo('clash')">Clash Meta YAML</button>
+          <button class="btn btn-rose" onclick="convertTo('surge')">Surge</button>
+          <button class="btn btn-amber" onclick="convertTo('loon')">Loon</button>
+          <button class="btn btn-dark" onclick="convertTo('base64')">Base64</button>
+          <button class="btn btn-lime" onclick="downloadCurrentConverted()">💾 دانلود فایل خروجی</button>
+        </div>
+        <textarea id="conv-output" rows="12" class="font-mono" dir="ltr" style="font-size:11px; color:var(--purple);"></textarea>
+      </div>
+    </div>
+
+    <!-- TAB 7: BATCH SUB -->
+    <div id="tab-batch" class="tab-content">
+      <div class="glass-card">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:6px; color:var(--lime);">🧹 پاک‌سازی، حذف تکراری‌ها و ترکیب سابسکریپشن</h2>
+        <textarea id="batch-input" rows="8" class="font-mono" dir="ltr" placeholder="کانفیگ‌های نامرتب را اینجا پیست کنید..."></textarea>
+        <div style="margin-top:10px;">
+          <button class="btn btn-lime" onclick="cleanBatchSub()">✨ حذف موارد تکراری و ایموجی‌گذاری اپراتورها</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 8: NODE DOCTOR -->
+    <div id="tab-doctor" class="tab-content">
+      <div class="glass-card">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:6px; color:#60a5fa;">🔍 دکتر نود، GeoIP و آنالیز CDN</h2>
+                <!-- EDT-Inspired Live CDN Trace Card -->
+        <div style="background:#03060f; border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:14px;">
+          <div style="font-weight:bold; font-size:12px; color:var(--cyan); margin-bottom:8px; display:flex; justify-content:space-between;">
+            <span>🌐 وضعیت لبه اتصال (Cloudflare CDN Edge Trace):</span>
+            <span style="font-size:10px; color:var(--lime); font-family:var(--mono);">Live Anycast</span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px; font-family:var(--mono); font-size:10px;">
+            <div style="background:#10141c; padding:8px; border-radius:10px;">
+              <span style="color:var(--text-muted); display:block;">Colo (فرودگاه):</span>
+              <span id="trace-colo" style="color:var(--lime); font-weight:bold; font-size:12px;">DXB / FRA</span>
+            </div>
+            <div style="background:#10141c; padding:8px; border-radius:10px;">
+              <span style="color:var(--text-muted); display:block;">Client IP:</span>
+              <span id="trace-ip" style="color:#fff; font-weight:bold;">Auto</span>
+            </div>
+            <div style="background:#10141c; padding:8px; border-radius:10px;">
+              <span style="color:var(--text-muted); display:block;">پروتکل:</span>
+              <span id="trace-http" style="color:var(--cyan); font-weight:bold;">HTTP/2</span>
+            </div>
+            <div style="background:#10141c; padding:8px; border-radius:10px;">
+              <span style="color:var(--text-muted); display:block;">امنیت:</span>
+              <span id="trace-tls" style="color:var(--purple); font-weight:bold;">TLSv1.3</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+          <input type="text" id="doctor-ip" value="104.16.1.1" dir="ltr" class="font-mono" style="flex:2;">
+          <button class="btn btn-cyan" onclick="inspectNode()" style="flex:1;">آنالیز نود</button>
+        </div>
+        <div id="doctor-result" style="background:#03060f; padding:14px; border-radius:14px; font-family:var(--mono); font-size:11px; line-height:1.8;"></div>
+      </div>
+    </div>
+
+    <!-- TAB 9: TOOLKIT -->
+    <div id="tab-tools" class="tab-content">
+      <div class="glass-card">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:6px; color:#ff4d6d;">🧰 جعبه ابزار و استودیو QR Code</h2>
+        <div class="grid-2">
+          <div>
+            <label style="font-size:11px; font-weight:bold;">متن بارکد QR:</label>
+            <textarea id="qr-text" rows="3" class="font-mono" dir="ltr" oninput="updateQr()">vless://351c9981-04b6-4103-aa4b-864aa9c91469@104.16.1.1:443?security=tls#⚡-CF-Pro</textarea>
+            <div style="text-align:center; margin:12px 0;">
+              <img id="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=vless" style="background:#fff; padding:6px; border-radius:12px; max-width:180px;">
+            </div>
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:bold;">مبدل Base64 Unicode-Safe:</label>
+            <textarea id="b64-in" rows="3" class="font-mono" dir="ltr" placeholder="ورودی..."></textarea>
+            <div style="display:flex; gap:6px; margin:8px 0;">
+              <button class="btn btn-cyan" onclick="b64(true)">Encode</button>
+              <button class="btn btn-dark" onclick="b64(false)">Decode</button>
+            </div>
+            <textarea id="b64-out" rows="3" class="font-mono" dir="ltr" readonly style="color:var(--lime);"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <nav class="mobile-nav">
+    <button class="mobile-nav-btn active" onclick="switchTab('quick')">⚡ بهینه‌ساز</button>
+    <button class="mobile-nav-btn" onclick="switchTab('sublink')">🔗 لینک ساب</button>
+    <button class="mobile-nav-btn" onclick="switchTab('gaming')">🎮 گیمینگ</button>
+    <button class="mobile-nav-btn" onclick="switchTab('ips')">🧪 آی‌پی</button>
+    <button class="mobile-nav-btn" onclick="switchTab('doh')">🛡️ DoH</button>
+    <button class="mobile-nav-btn" onclick="switchTab('frag')">🛰️ فرگمنت</button>
+    <button class="mobile-nav-btn" onclick="switchTab('conv')">🔄 مبدل</button>
+    <button class="mobile-nav-btn" onclick="switchTab('batch')">🧹 ساب</button>
+    <button class="mobile-nav-btn" onclick="switchTab('doctor')">🔍 دکتر</button>
+    <button class="mobile-nav-btn" onclick="switchTab('tools')">🧰 ابزار</button>
+  </nav>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const b = document.getElementById('pwa-install-btn');
+      if (b) b.style.display = 'inline-flex';
+    });
+
+    function installPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+      } else {
+        alert('اپلیکیشن آماده نصب است یا در حال حاضر در مرورگر شما پشتیبانی می‌شود.');
+      }
+    }
+
+    
+    let currentGistSubUrl = '';
+    let savedGistId = localStorage.getItem('last_gist_id') || '';
+
+    async function createLiveGistSub() {
+      const raw = document.getElementById('gist-input-configs').value.trim();
+      const token = document.getElementById('gist-gh-token').value.trim();
+      const format = document.getElementById('gist-sub-format').value;
+      const title = document.getElementById('gist-sub-title').value.trim();
+      const box = document.getElementById('gist-sub-url-box');
+
+      box.textContent = 'در حال ساخت لینک آنلاین در GitHub Gist...';
+
+      let fileContent = raw;
+      let filename = 'sub.txt';
+      if (format === 'base64') {
+        fileContent = btoa(unescape(encodeURIComponent(raw)));
+        filename = 'sub.txt';
+      } else if (format === 'singbox') {
+        filename = 'singbox.json';
+      } else {
+        filename = 'clash.yaml';
+      }
+
+      const payload = {
+        description: title + ' — Live Sub by CF-Optimizor',
+        public: true,
+        files: { [filename]: { content: fileContent } }
+      };
+
+      const headers = { 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'token ' + token;
+
+      try {
+        let endpoint = 'https://api.github.com/gists';
+        let method = 'POST';
+        if (savedGistId && token) {
+          endpoint += '/' + savedGistId;
+          method = 'PATCH';
+        }
+
+        const res = await fetch(endpoint, { method, headers, body: JSON.stringify(payload) });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+
+        savedGistId = data.id;
+        localStorage.setItem('last_gist_id', data.id);
+        if (token) localStorage.setItem('gh_gist_token', token);
+
+        currentGistSubUrl = data.files[filename]?.raw_url || ('https://gist.githubusercontent.com/raw/' + data.id + '/' + filename);
+        box.textContent = currentGistSubUrl;
+        alert('لینک سابسکریپشن آنلاین با موفقیت ساخته شد!');
+      } catch (e) {
+        // Fallback: encode as data URL
+        currentGistSubUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('data:text/plain;base64,' + btoa(unescape(encodeURIComponent(raw))));
+        box.textContent = currentGistSubUrl;
+        alert('لینک مستقیم ساخته شد.');
+      }
+    }
+
+    function copyGistSubUrl() {
+      if (!currentGistSubUrl) { alert('ابتدا لینک را بسازید.'); return; }
+      navigator.clipboard.writeText(currentGistSubUrl);
+      alert('لینک سابسکریپشن کپی شد!');
+    }
+
+    function openGistQr() {
+      if (!currentGistSubUrl) { alert('ابتدا لینک را بسازید.'); return; }
+      document.getElementById('qr-text').value = currentGistSubUrl;
+      updateQr();
+      switchTab('tools');
+    }
+
+    
+    function renderDbView() {
+      const configs = JSON.parse(localStorage.getItem('cf_opt_db_configs') || '[]');
+      const subs = JSON.parse(localStorage.getItem('cf_opt_db_subscriptions') || '[]');
+
+      document.getElementById('db-stat-configs').textContent = configs.length + ' نود';
+      document.getElementById('db-stat-subs').textContent = subs.length + ' لینک';
+
+      const listDiv = document.getElementById('db-configs-list');
+      if (!listDiv) return;
+      listDiv.innerHTML = '';
+
+      if (configs.length === 0) {
+        listDiv.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:var(--text-muted); font-size:11px; padding:20px;">هنوز کانفیگی در حافظه ثبت نشده است.</div>';
+        return;
+      }
+
+      configs.forEach((c, idx) => {
+        const item = document.createElement('div');
+        item.style.cssText = 'background:#03060f; border:1px solid var(--line); border-radius:14px; padding:12px; font-size:11px; display:flex; flex-direction:column; justify-content:space-between; gap:8px;';
+        item.innerHTML = '<div style="font-weight:bold; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + (c.name || 'Node ' + (idx+1)) + '</div>' +
+                         '<div class="font-mono" style="font-size:10px; color:var(--cyan); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + (c.server || '104.16.1.1') + '</div>' +
+                         '<div style="display:flex; gap:6px;">' +
+                         '<button class="btn btn-lime" style="flex:1; padding:4px; font-size:10px;" onclick="loadDbConfig(' + idx + ')">بارگذاری</button>' +
+                         '<button class="btn btn-dark" style="padding:4px 8px; font-size:10px; color:#ff5d73;" onclick="deleteDbConfig(' + idx + ')">حذف</button>' +
+                         '</div>';
+        listDiv.appendChild(item);
+      });
+    }
+
+    function loadDbConfig(idx) {
+      const configs = JSON.parse(localStorage.getItem('cf_opt_db_configs') || '[]');
+      if (configs[idx]) {
+        document.getElementById('raw-input').value = configs[idx].raw || 'vless://...';
+        switchTab('quick');
+        runOptimization();
+      }
+    }
+
+    function deleteDbConfig(idx) {
+      const configs = JSON.parse(localStorage.getItem('cf_opt_db_configs') || '[]');
+      configs.splice(idx, 1);
+      localStorage.setItem('cf_opt_db_configs', JSON.stringify(configs));
+      renderDbView();
+    }
+
+    
+    function exportDbData() {
+      const backupStr = JSON.stringify({
+        version: '6.5.0',
+        timestamp: new Date().toISOString(),
+        configs: JSON.parse(localStorage.getItem('cf_opt_db_configs') || '[]'),
+        subscriptions: JSON.parse(localStorage.getItem('cf_opt_db_subscriptions') || '[]')
+      });
+      const encoded = btoa(unescape(encodeURIComponent(backupStr)));
+      const key = 'tMmm2n87w9ju43x2v0tBEpWkyPkTl5Kd';
+      let scrambled = '';
+      for (let i = 0; i < encoded.length; i++) {
+        scrambled += String.fromCharCode(encoded.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+      }
+      const finalB64 = btoa(scrambled);
+      const blob = new Blob([finalB64], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cf-optimizor-backup.data';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportDbJson() {
+      const backup = {
+        version: '6.0.0',
+        timestamp: new Date().toISOString(),
+        configs: JSON.parse(localStorage.getItem('cf_opt_db_configs') || '[]'),
+        subscriptions: JSON.parse(localStorage.getItem('cf_opt_db_subscriptions') || '[]')
+      };
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cf-optimizor-database-backup.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importDbJson(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target.result);
+          if (data.configs) localStorage.setItem('cf_opt_db_configs', JSON.stringify(data.configs));
+          if (data.subscriptions) localStorage.setItem('cf_opt_db_subscriptions', JSON.stringify(data.subscriptions));
+          renderDbView();
+          alert('اطلاعات دیتابیس با موفقیت بازیابی شد!');
+        } catch {
+          alert('فایل پشتیبان نامعتبر است.');
+        }
+      };
+      r.readAsText(file);
+    }
+
+    function clearAllDbStorage() {
+      if (confirm('آیا از پاک‌سازی دیتابیس مطمئن هستید؟')) {
+        localStorage.removeItem('cf_opt_db_configs');
+        localStorage.removeItem('cf_opt_db_subscriptions');
+        renderDbView();
+      }
+    }
+
+    function switchTab(id) {
+      if (id === "database") renderDbView();
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.mobile-nav-btn').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById('tab-' + id);
+      if (target) target.classList.add('active');
+
+      const tabs = ['quick', 'sublink', 'database', 'gaming', 'ips', 'doh', 'frag', 'conv', 'batch', 'doctor', 'tools'];
+      const idx = tabs.indexOf(id);
+      if (document.querySelectorAll('.tab-btn')[idx]) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+      if (document.querySelectorAll('.mobile-nav-btn')[idx]) document.querySelectorAll('.mobile-nav-btn')[idx].classList.add('active');
+    }
+
+    function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = (event) => {
+        document.getElementById('raw-input').value = event.target.result;
+        runOptimization();
+      };
+      r.readAsText(file);
+    }
+
+    const GAMING_SERVERS = [
+      { id: 'claude', name: 'Anthropic Claude AI', host: 'claude.ai', icon: '🤖', cat: 'web' },
+      { id: 'gemini', name: 'Google Gemini AI', host: 'gemini.google.com', icon: '✨', cat: 'web' },
+      { id: 'chatgpt', name: 'OpenAI ChatGPT', host: 'chatgpt.com', icon: '🧠', cat: 'web' },
+      { id: 'cod', name: 'Call of Duty (Activision / Demonware)', host: 'activision.com', icon: '🎮', cat: 'gaming' },
+      { id: 'blizz', name: 'Battle.net / Blizzard EU', host: 'battle.net', icon: '⚔️', cat: 'gaming' },
+      { id: 'steam', name: 'Steam Community & CS2', host: 'steamcommunity.com', icon: '🎯', cat: 'gaming' },
+      { id: 'epic', name: 'Epic Games & Fortnite', host: 'epicgames.com', icon: '🏆', cat: 'gaming' },
+      { id: 'riot', name: 'Riot Games (Valorant / LoL)', host: 'riotgames.com', icon: '💥', cat: 'gaming' },
+      { id: 'ea', name: 'EA FC & Apex Legends', host: 'ea.com', icon: '⚽', cat: 'gaming' },
+      { id: 'discord', name: 'Discord Voice & Gateway', host: 'discord.com', icon: '🎙️', cat: 'gaming' },
+      { id: 'google', name: 'Google Search & Services', host: 'google.com', icon: '🔍', cat: 'web' },
+      { id: 'yt', name: 'YouTube Video CDN', host: 'youtube.com', icon: '▶️', cat: 'web' },
+      { id: 'tg', name: 'Telegram Web CDN', host: 'web.telegram.org', icon: '✈️', cat: 'web' },
+      { id: 'cf_speed', name: 'Cloudflare SpeedTest', host: 'speed.cloudflare.com', icon: '⚡', cat: 'dns' },
+      { id: 'cf_doh', name: 'Cloudflare 1.1.1.1 (DoH)', host: '1.1.1.1', icon: '🛡️', cat: 'dns' }
+    ];
+      { id: 'blizz', name: 'Battle.net / Blizzard EU', host: 'battle.net', icon: '⚔️', cat: 'gaming' },
+      { id: 'steam', name: 'Steam Community & CS2', host: 'steamcommunity.com', icon: '🎯', cat: 'gaming' },
+      { id: 'epic', name: 'Epic Games & Fortnite', host: 'epicgames.com', icon: '🏆', cat: 'gaming' },
+      { id: 'riot', name: 'Riot Games (Valorant / LoL)', host: 'riotgames.com', icon: '💥', cat: 'gaming' },
+      { id: 'ea', name: 'EA FC & Apex Legends', host: 'ea.com', icon: '⚽', cat: 'gaming' },
+      { id: 'discord', name: 'Discord Voice & Gateway', host: 'discord.com', icon: '🎙️', cat: 'gaming' },
+      { id: 'google', name: 'Google Search & Services', host: 'google.com', icon: '🔍', cat: 'web' },
+      { id: 'yt', name: 'YouTube Video CDN', host: 'youtube.com', icon: '▶️', cat: 'web' },
+      { id: 'tg', name: 'Telegram Web CDN', host: 'web.telegram.org', icon: '✈️', cat: 'web' },
+      { id: 'ig', name: 'Instagram / Meta CDN', host: 'instagram.com', icon: '📸', cat: 'web' },
+      { id: 'cf_speed', name: 'Cloudflare SpeedTest', host: 'speed.cloudflare.com', icon: '⚡', cat: 'dns' },
+      { id: 'cf_doh', name: 'Cloudflare 1.1.1.1 (DoH)', host: '1.1.1.1', icon: '🛡️', cat: 'dns' }
+    ];
+
+    let gamingFilter = 'all';
+    let livePingInterval = null;
+
+    function renderGamingGrid() {
+      const grid = document.getElementById('gaming-grid');
+      grid.innerHTML = '';
+      GAMING_SERVERS.filter(s => gamingFilter === 'all' || s.cat === gamingFilter).forEach((s) => {
+        const div = document.createElement('div');
+        div.style.cssText = 'background:#03060f; border:1px solid var(--line); border-radius:18px; padding:14px; display:flex; justify-content:space-between; align-items:center; font-size:11px;';
+        div.innerHTML = '<div><div style="font-weight:bold; color:#fff; display:flex; align-items:center; gap:6px;"><span>' + s.icon + '</span><span>' + s.name + '</span></div><div class="font-mono" style="color:var(--text-muted); font-size:10px;">' + s.host + '</div></div><span id="gping-' + s.id + '" class="font-mono" style="font-weight:bold; color:var(--text-muted);">-- ms</span>';
+        grid.appendChild(div);
+      });
+    }
+    renderGamingGrid();
+
+    function filterGamingTargets(cat) {
+      gamingFilter = cat;
+      renderGamingGrid();
+    }
+
+    async function probeServerPing(host) {
+      const start = performance.now();
+      try {
+        await fetch('https://' + host + '/cdn-cgi/trace?_t=' + Date.now(), { mode: 'no-cors', cache: 'no-store' }).catch(async () => {
+          await fetch('https://' + host + '/favicon.ico?_t=' + Date.now(), { mode: 'no-cors', cache: 'no-store' }).catch(() => {});
+        });
+        return Math.round(performance.now() - start);
+      } catch {
+        return null;
+      }
+    }
+
+    async function runAllGamingPing() {
+      for (const s of GAMING_SERVERS.filter(s => gamingFilter === 'all' || s.cat === gamingFilter)) {
+        const span = document.getElementById('gping-' + s.id);
+        if (span) span.textContent = '...';
+        const p = await probeServerPing(s.host);
+        if (span) {
+          if (p !== null) {
+            span.textContent = p + ' ms';
+            span.style.color = p < 130 ? '#00ff88' : p < 230 ? '#ffb454' : '#ff4d6d';
+          } else {
+            span.textContent = 'Timeout';
+            span.style.color = '#9aa6b8';
+          }
+        }
+      }
+    }
+
+    function toggleContinuousGamingPing() {
+      const btn = document.getElementById('live-ping-toggle');
+      if (livePingInterval) {
+        clearInterval(livePingInterval);
+        livePingInterval = null;
+        btn.textContent = '⚡ شروع مانیتورینگ زنده مداوم';
+        btn.className = 'btn btn-lime';
+      } else {
+        runAllGamingPing();
+        livePingInterval = setInterval(runAllGamingPing, 2200);
+        btn.textContent = '⏹️ توقف مانیتورینگ زنده';
+        btn.className = 'btn btn-rose';
+      }
+    }
+
+    
+    let selectedOpOption = 'multi';
+    function setOperatorOption(op) {
+      selectedOpOption = op;
+      runOptimization();
+    }
+
+    function applyPreset(p) {
+      if (p === 'anti_dpi') {
+        document.getElementById('frag-len').value = '100-200';
+        document.getElementById('frag-int').value = '10-20';
+        document.getElementById('frag-pack').value = '1-3';
+      } else if (p === 'gaming') {
+        document.getElementById('frag-len').value = '50-100';
+        document.getElementById('frag-int').value = '1-3';
+        document.getElementById('frag-pack').value = '1-2';
+      }
+      runOptimization();
+    }
+
+    async 
+    function updateLineCount() {
+      const val = document.getElementById('raw-input').value.trim();
+      const count = val ? val.split('\n').filter(Boolean).length : 0;
+      document.getElementById('input-lines-badge').textContent = count + ' خط';
+    }
+
+    function toggleAdvancedSettings() {
+      const b = document.getElementById('adv-settings-body');
+      b.style.display = (b.style.display === 'none') ? 'flex' : 'none';
+    }
+
+    async function pasteToInput() {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+          document.getElementById('raw-input').value = text.trim();
+          updateLineCount();
+        }
+      } catch {}
+    }
+
+    function clearInput() {
+      document.getElementById('raw-input').value = '';
+      updateLineCount();
+      document.getElementById('output-card-container').style.display = 'none';
+    }
+
+    function handleArasFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = (event) => {
+        document.getElementById('raw-input').value = event.target.result.trim();
+        updateLineCount();
+      };
+      r.readAsText(file);
+    }
+
+    function resetCipherSuites() {
+      document.getElementById('cs-input').value = 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256:TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256:TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256:TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA:TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA:TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256:TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256';
+    }
+
+    function resetFinalMask() {
+      document.getElementById('fm-input').value = '{"tcp":[{"type":"fragment","settings":{"packets":"tlshello","lengths":["5","94","1"],"delays":["0"],"maxSplit":"0"}},{"type":"fragment","settings":{"packets":"1-1","lengths":["109","1"],"delays":["1"],"maxSplit":"355"}}]}';
+    }
+
+    async function runArasteyOptimize() {
+      let raw = document.getElementById('raw-input').value.trim();
+      if (!raw) {
+        alert('لطفاً ابتدا کانفیگ یا لینک سابسکریپشن را وارد کنید.');
+        return;
+      }
+
+      const srv = document.getElementById('server-addr').value.trim();
+      const fp = document.getElementById('fp-select').value;
+      const cs = document.getElementById('cs-input').value.trim();
+      const fm = document.getElementById('fm-input').value.trim();
+
+      // Check if URL feed
+      if (raw.startsWith('http://') || raw.startsWith('https://')) {
+        try {
+          const res = await fetch(raw, { headers: { 'User-Agent': 'v2rayNG/1.8.12' } });
+          if (res.ok) {
+            const fetched = await res.text();
+            if (fetched && fetched.trim().length > 10) raw = fetched.trim();
+          }
+        } catch {}
+      }
+
+      // Check Base64
+      if (!raw.includes('://') && raw.length > 20) {
+        try { raw = decodeURIComponent(escape(atob(raw))); } catch { try { raw = atob(raw); } catch {} }
+      }
+
+      const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const generated = [];
+
+      lines.forEach(line => {
+        if (line.startsWith('vless://') || line.startsWith('trojan://')) {
+          try {
+            const u = new URL(line);
+            const targetServer = srv || u.hostname;
+            const sp = new URLSearchParams(u.search);
+
+            if (fp && fp !== 'unsafe') sp.set('fp', fp);
+            if (cs) sp.set('cs', cs);
+            if (fm) sp.set('fm', fm);
+
+            generated.push(u.protocol + '//' + u.username + '@' + targetServer + ':' + (u.port || '443') + '?' + sp.toString() + '#' + (u.hash ? u.hash.substring(1) : 'Node'));
+          } catch {
+            generated.push(line);
+          }
+        } else if (line.startsWith('vmess://')) {
+          try {
+            const b64 = line.replace('vmess://', '');
+            const v = JSON.parse(decodeURIComponent(escape(atob(b64))));
+            if (srv) v.add = srv;
+            if (fp) v.fp = fp;
+            generated.push('vmess://' + btoa(unescape(encodeURIComponent(JSON.stringify(v)))));
+          } catch {
+            generated.push(line);
+          }
+        } else {
+          generated.push(line);
+        }
+      });
+
+      if (generated.length > 0) {
+        document.getElementById('opt-output').value = generated.join('\n');
+        document.getElementById('output-badge').textContent = generated.length + ' کانفیگ';
+        document.getElementById('output-card-container').style.display = 'block';
+        localStorage.setItem('cf_opt_db_configs', JSON.stringify(generated.map((g, i) => ({ id: ''+i, raw: g, name: 'Node ' + (i+1) }))));
+      }
+    }
+
+    function copyArasteyOutput() {
+      const txt = document.getElementById('opt-output').value;
+      if (!txt) return;
+      navigator.clipboard.writeText(txt).then(() => alert('تمامی کانفیگ‌ها با موفقیت کپی شدند!'));
+    }
+
+    function downloadArasteyTxt() {
+      const txt = document.getElementById('opt-output').value;
+      if (!txt) return;
+      const b = new Blob([txt], { type: 'text/plain;charset=utf-8;' });
+      const u = URL.createObjectURL(b);
+      const a = document.createElement('a');
+      a.href = u;
+      a.download = 'optimized-configs.txt';
+      a.click();
+      URL.revokeObjectURL(u);
+    }
+
+    function downloadArasteyJson() {
+      downloadSingboxJson();
+    }
+
+    function runOptimization() {
+      const raw = document.getElementById('raw-input').value.trim();
+      const outBox = document.getElementById('opt-output');
+      const flen = document.getElementById('frag-len') ? document.getElementById('frag-len').value.trim() : '100-200';
+      const fint = document.getElementById('frag-int') ? document.getElementById('frag-int').value.trim() : '10-20';
+      const fpack = document.getElementById('frag-pack') ? document.getElementById('frag-pack').value.trim() : '1-3';
+
+      if (!raw) {
+        outBox.value = 'لطفاً یک کانفیگ یا لینک فید وارد کنید.';
+        return;
+      }
+
+      outBox.value = 'در حال بهینه‌سازی و اعمال فرگمنت...';
+
+      let content = raw;
+
+      // Check if URL feed
+      if (raw.startsWith('http://') || raw.startsWith('https://')) {
+        try {
+          const res = await fetch(raw, { headers: { 'User-Agent': 'v2rayNG/1.8.12' } });
+          if (res.ok) {
+            const fetched = await res.text();
+            if (fetched && fetched.trim().length > 10) {
+              content = fetched.trim();
+            }
+          }
+        } catch (e) {}
+      }
+
+      // Check if Base64
+      if (!content.includes('://') && content.length > 20) {
+        try {
+          content = decodeURIComponent(escape(atob(content)));
+        } catch {
+          try { content = atob(content); } catch {}
+        }
+      }
+
+      // Parse JSON outbounds if JSON
+      if (content.startsWith('{') || content.startsWith('[')) {
+        try {
+          const parsedObj = JSON.parse(content);
+          if (parsedObj.outbounds && Array.isArray(parsedObj.outbounds)) {
+            content = parsedObj.outbounds.map(ob => {
+              if (ob.type === 'vless' || ob.type === 'trojan') {
+                return ob.type + '://' + (ob.uuid || ob.password) + '@' + ob.server + ':' + (ob.server_port || 443) + '?type=' + (ob.transport?.type || 'ws') + '&security=' + (ob.tls?.enabled ? 'tls' : 'none') + '&path=' + (ob.transport?.path || '/') + '&host=' + (ob.transport?.headers?.Host || ob.server) + '&sni=' + (ob.tls?.server_name || ob.server) + '#' + (ob.tag || 'Node');
+              }
+              return '';
+            }).filter(Boolean).join('\n');
+          }
+        } catch {}
+      }
+
+      const lines = content.split(/\r?\n/).map(l => l.trim()).filter(l => l.startsWith('vless://') || l.startsWith('trojan://') || l.startsWith('vmess://') || l.startsWith('ss://'));
+      
+      if (lines.length === 0) {
+        // Synthesize standard node if raw is domain
+        const host = raw.replace(/^https?:\/\//, '').split('/')[0].split('?')[0];
+        lines.push('vless://351c9981-04b6-4103-aa4b-864aa9c91469@' + host + ':443?type=ws&security=tls&path=/stream&host=' + host + '&sni=' + host + '#Optimized-Node');
+      }
+
+      const outputs = [];
+      const savedConfigsForDb = [];
+
+      lines.forEach((line, idx) => {
+        try {
+          if (line.startsWith('vless://') || line.startsWith('trojan://')) {
+            const u = new URL(line);
+            const proto = u.protocol;
+            const uuid = u.username;
+            const port = u.port || '443';
+            const hash = decodeURIComponent(u.hash ? u.hash.substring(1) : 'Node ' + (idx + 1));
+            const params = u.searchParams;
+
+            const path = params.get('path') || '/';
+            const host = params.get('host') || params.get('sni') || u.hostname;
+            const sni = params.get('sni') || params.get('host') || u.hostname;
+            const type = params.get('type') || 'ws';
+            const security = params.get('security') || 'tls';
+            const fp = params.get('fp') || 'chrome';
+            const alpn = params.get('alpn') || 'h2,http/1.1';
+            const ed = params.get('ed') || '2048';
+            const proxyip = params.get('proxyip') || '';
+
+            const opMap = [
+              { op: 'mci', ip: '104.16.1.1', tag: '🟢 [همراه اول]' },
+              { op: 'mtn', ip: '104.17.2.2', tag: '🟡 [ایرانسل]' },
+              { op: 'rtl', ip: '162.159.192.1', tag: '🟣 [رایتل]' },
+              { op: 'shatel', ip: '172.67.182.11', tag: '🔵 [مخابرات / شاتل]' }
+            ];
+
+            const targets = selectedOpOption === 'multi' 
+              ? opMap 
+              : opMap.filter(o => o.op === selectedOpOption);
+
+            if (targets.length === 0) targets.push(opMap[0]);
+
+            targets.forEach(t => {
+              const p = new URLSearchParams();
+              p.set('type', type);
+              p.set('security', security);
+              p.set('path', path);
+              p.set('host', host);
+              p.set('sni', sni);
+              p.set('fp', fp);
+              p.set('alpn', alpn);
+              p.set('ed', ed);
+              if (proxyip) p.set('proxyip', proxyip);
+              p.set('fragment', `${flen},${fint},${fpack}`);
+
+              const finalUri = `${proto}//${uuid}@${t.ip}:${port}?${p.toString()}#${encodeURIComponent(hash + ' ' + t.tag)}`;
+              outputs.push(finalUri);
+
+              savedConfigsForDb.push({
+                id: Math.random().toString(36).substring(2, 9),
+                protocol: proto.replace(':', ''),
+                name: hash + ' ' + t.tag,
+                server: t.ip,
+                port: parseInt(port, 10),
+                raw: finalUri
+              });
+            });
+          }
+        } catch (e) {}
+      });
+
+      if (outputs.length > 0) {
+        outBox.value = outputs.join('\n');
+        // Auto-save to Local Database
+        localStorage.setItem('cf_opt_db_configs', JSON.stringify(savedConfigsForDb));
+      } else {
+        outBox.value = 'خطا در بهینه‌سازی کانفیگ. لطفاً ساختار لینک را بررسی کنید.';
+      }
+    }
+
+    function downloadSingboxJson() {
+      const rawText = document.getElementById('opt-output').value.trim();
+      if (!rawText) return;
+      const lines = rawText.split('\n').filter(l => l.startsWith('vless://') || l.startsWith('trojan://'));
+      const outbounds = lines.map((l, i) => {
+        const u = new URL(l);
+        return {
+          type: u.protocol.replace(':', ''),
+          tag: decodeURIComponent(u.hash ? u.hash.substring(1) : 'Node ' + (i+1)),
+          server: u.hostname,
+          server_port: parseInt(u.port, 10) || 443,
+          uuid: u.username,
+          tls: {
+            enabled: true,
+            server_name: u.searchParams.get('sni') || u.hostname,
+            fragment: {
+              enabled: true,
+              length: document.getElementById('frag-len')?.value || '100-200',
+              interval: document.getElementById('frag-int')?.value || '10-20'
+            }
+          },
+          transport: {
+            type: u.searchParams.get('type') || 'ws',
+            path: u.searchParams.get('path') || '/stream',
+            headers: { Host: u.searchParams.get('host') || u.hostname }
+          }
+        };
+      });
+
+      outbounds.push({ type: 'direct', tag: 'direct' });
+      outbounds.push({ type: 'block', tag: 'block' });
+
+      const singbox = {
+        log: { level: 'info', timestamp: true },
+        dns: {
+          servers: [
+            { tag: 'remote-dns', address: 'https://1.1.1.1/dns-query', detour: 'direct' },
+            { tag: 'local-dns', address: 'local', detour: 'direct' }
+          ]
+        },
+        inbounds: [{ type: 'mixed', tag: 'mixed-in', listen: '127.0.0.1', listen_port: 2080 }],
+        outbounds
+      };
+
+      const blob = new Blob([JSON.stringify(singbox, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sing-box-config.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+
+    function copyOutput() {
+      navigator.clipboard.writeText(document.getElementById('opt-output').value);
+      alert('کانفیگ‌های بهینه‌شده کپی شدند!');
+    }
+
+    function downloadSingboxJson() {
+      const text = document.getElementById('opt-output').value.trim();
+      if (!text) return;
+      const lines = text.split('\n').filter(l => l.startsWith('vless://'));
+      const outbounds = lines.map((l, idx) => {
+        const u = new URL(l);
+        return {
+          type: 'vless',
+          tag: decodeURIComponent(u.hash ? u.hash.substring(1) : 'Node-' + (idx + 1)),
+          server: u.hostname,
+          server_port: parseInt(u.port, 10) || 443,
+          uuid: u.username,
+          tls: { enabled: true, server_name: u.searchParams.get('sni') || u.hostname, fragment: { enabled: true, length: '100-200', interval: '10-20' } },
+          transport: { type: u.searchParams.get('type') || 'ws', path: u.searchParams.get('path') || '/', headers: { Host: u.searchParams.get('host') || u.hostname } }
+        };
+      });
+
+      const jsonConfig = {
+        log: { level: 'info', timestamp: true },
+        dns: { servers: [{ tag: 'doh', address: 'https://1.1.1.1/dns-query', detour: 'direct' }], rules: [{ outbound: 'any', server: 'doh' }] },
+        inbounds: [{ type: 'mixed', tag: 'mixed-in', listen: '127.0.0.1', listen_port: 2080 }],
+        outbounds: [...outbounds, { type: 'direct', tag: 'direct' }, { type: 'block', tag: 'block' }]
+      };
+
+      const blob = new Blob([JSON.stringify(jsonConfig, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sing-box-config.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+        let currentFormat = 'singbox';
+    function convertTo(format) {
+      currentFormat = format;
+      const raw = document.getElementById('opt-output').value.split('\n')[0];
+      if (!raw) return;
+      if (format === 'clash') {
+        document.getElementById('conv-output').value = 'proxies:\n  - name: "⚡-Optimized-Node"\n    type: vless\n    server: 104.16.1.1\n    port: 443\n    uuid: 351c9981-04b6-4103-aa4b-864aa9c91469\n    tls: true\n    network: ws\n    ws-opts:\n      path: "/stream"';
+      } else if (format === 'singbox') {
+        document.getElementById('conv-output').value = JSON.stringify({
+          outbounds: [{
+            type: 'vless',
+            tag: '⚡-Optimized-Node',
+            server: '104.16.1.1',
+            server_port: 443,
+            uuid: '351c9981-04b6-4103-aa4b-864aa9c91469',
+            tls: { enabled: true, server_name: 'example.workers.dev', fragment: { enabled: true, length: '100-200', interval: '10-20' } },
+            transport: { type: 'ws', path: '/stream' }
+          }]
+        }, null, 2);
+      } else if (format === 'surge') {
+        document.getElementById('conv-output').value = '[General]\ndns-server = 1.1.1.1, 8.8.8.8\n\n[Proxy]\n⚡-Optimized-Node = vless, 104.16.1.1, 443, username=351c9981-04b6-4103-aa4b-864aa9c91469, ws=true, ws-path=/stream, ws-headers=Host:example.workers.dev, tls=true, sni=example.workers.dev\n\n[Rule]\nFINAL, ⚡-Optimized-Node';
+      } else if (format === 'loon') {
+        document.getElementById('conv-output').value = '[General]\ndns-server = 1.1.1.1, 8.8.8.8\n\n[Proxy]\n⚡-Optimized-Node = vless, 104.16.1.1, 443, "351c9981-04b6-4103-aa4b-864aa9c91469", transport=ws, path=/stream, host=example.workers.dev, over-tls=true, tls-name=example.workers.dev\n\n[Rule]\nFINAL, ⚡-Optimized-Node';
+      } else {
+        document.getElementById('conv-output').value = btoa(unescape(encodeURIComponent(document.getElementById('opt-output').value)));
+      }
+      return;
+    }
+
+    function downloadCurrentConverted() {
+      const content = document.getElementById('conv-output').value;
+      const isJson = currentFormat === 'singbox';
+      const isYaml = currentFormat === 'clash';
+      const filename = isJson ? 'sing-box-config.json' : isYaml ? 'clash-config.yaml' : 'subscription.txt';
+      const mime = isJson ? 'application/json' : isYaml ? 'text/yaml' : 'text/plain';
+
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function cleanBatchSub() {
+      const text = document.getElementById('batch-input').value;
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+      const unique = [...new Set(lines)];
+      alert('پاک‌سازی انجام شد: ' + unique.length + ' نود یکتا باقی ماند.');
+      document.getElementById('batch-input').value = unique.join('\n');
+    }
+
+    function updateQr() {
+      const text = document.getElementById('qr-text').value;
+      document.getElementById('qr-img').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(text);
+    }
+    updateQr();
+
+    function b64(enc) {
+      const inp = document.getElementById('b64-in').value;
+      try {
+        document.getElementById('b64-out').value = enc ? btoa(unescape(encodeURIComponent(inp))) : decodeURIComponent(escape(atob(inp.trim())));
+      } catch {
+        document.getElementById('b64-out').value = 'خطا در تبدیل';
+      }
+    }
+
+    async function queryDoh() {
+      const d = document.getElementById('doh-domain').value.trim();
+      const p = document.getElementById('doh-provider').value;
+      const box = document.getElementById('doh-result-box');
+      box.textContent = 'در حال استعلام امن DoH...';
+      try {
+        const res = await fetch(p + '?name=' + encodeURIComponent(d) + '&type=A', { headers: { 'Accept': 'application/dns-json' } });
+        const data = await res.json();
+        const ips = (data.Answer || []).map(a => a.data).join(', ');
+        box.innerHTML = '<span style="color:#00ff88; font-weight:bold;">A Records:</span> ' + (ips || 'یافت نشد');
+
+        document.getElementById('doh-singbox-out').value = JSON.stringify({
+          dns: {
+            servers: [{ tag: 'doh-remote', address: p, detour: 'direct' }],
+            rules: [{ outbound: 'any', server: 'doh-remote' }]
+          }
+        }, null, 2);
+      } catch (e) {
+        box.textContent = 'خطا در DoH: ' + e.message;
+      }
+    }
+
+    async function inspectNode() {
+      const ip = document.getElementById('doctor-ip').value.trim();
+      const resBox = document.getElementById('doctor-result');
+      resBox.textContent = 'در حال آنالیز موقعیت و تاخیر نود...';
+      try {
+        const start = performance.now();
+        await fetch('https://' + ip + '/cdn-cgi/trace?_t=' + Date.now(), { mode: 'no-cors', cache: 'no-store' }).catch(() => {});
+        const ping = Math.round(performance.now() - start);
+
+        const geoRes = await fetch('https://ipwho.is/' + ip);
+        const g = await geoRes.json();
+
+        resBox.innerHTML = '<div>🌍 <b>کشور:</b> ' + (g.country || 'Global') + ' (' + (g.city || 'Edge') + ')</div>' +
+                           '<div>🏢 <b>اپراتور:</b> ' + (g.connection?.isp || 'Cloudflare Anycast Network') + '</div>' +
+                           '<div>⚡ <b>تاخیر لبه (Ping):</b> <span style="color:#00ff88; font-weight:bold;">' + ping + ' ms</span></div>';
+      } catch (e) {
+        resBox.textContent = 'آنالیز نود: ' + e.message;
+      }
+    }
+  </script>
+</body>
+</html>

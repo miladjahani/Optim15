@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: #080a0e;
+    --card-bg: rgba(16, 20, 28, 0.85);
+  }
+  [data-theme="light"] {
+    --bg-main: #f4f6fb;
+    --card-bg: rgba(255, 255, 255, 0.9);
+  }
+}
+
+body {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  background-color: var(--bg-main);
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(8, 10, 14, 0.5); }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }

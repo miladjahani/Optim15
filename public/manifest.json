@@ -1,0 +1,49 @@
+{
+  "name": "CF-Optimizor Pro",
+  "short_name": "CF-Optimizor",
+  "description": "Live Gaming Ping, Call of Duty Latency, Anti-DPI Fragment & Subconverter PWA",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./",
+  "display": "standalone",
+  "background_color": "#080a0e",
+  "theme_color": "#00ff88",
+  "orientation": "portrait-primary",
+  "categories": [
+    "utilities",
+    "network",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
